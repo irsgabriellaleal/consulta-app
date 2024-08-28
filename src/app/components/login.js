@@ -1,9 +1,8 @@
 'use client'
-import Link from "next/link"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/src/components/ui/label"
+import { Input } from "@/src/components/ui/input"
+import { Button } from "@/src/components/ui/button"
+import { Checkbox } from "@/src/components/ui/checkbox"
 
 export default function Component() {
   return (
@@ -15,9 +14,6 @@ export default function Component() {
           </h2>
           <p className="mt-2 text-center text-sm text-muted-foreground">
             Ou{" "}
-            <Link href="#" className="font-medium text-primary hover:text-primary-foreground" prefetch={false}>
-              Cadastre sua conta
-            </Link>
           </p>
         </div>
         <form className="space-y-6" action="#" method="POST">
@@ -63,9 +59,6 @@ export default function Component() {
             </Label>
           </div>
           <div className="text-sm">
-            <Link href="#" className="font-medium text-primary hover:text-primary-foreground" prefetch={false}>
-              Esqueceu sua senha?
-            </Link>
           </div>
         </div>
         <div className="flex items-center justify-between">
