@@ -1,27 +1,27 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Link from "next/link"
+import { useState, useEffect } from "react";
+import Link from "next/link";
 
 export default function LandingPage() {
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await fetch('/api/users')
+        const response = await fetch("/api/users");
         if (!response.ok) {
-          throw new Error('Falha ao buscar usuários')
+          throw new Error("Falha ao buscar usuários");
         }
-        const data = await response.json()
-        setUsers(data)
+        const data = await response.json();
+        setUsers(data);
       } catch (error) {
-        console.error('Erro ao buscar usuários:', error)
+        console.error("Erro ao buscar usuários:", error);
       }
     }
 
-    fetchUsers()
-  }, [])
+    fetchUsers();
+  }, []);
 
   return (
     <div className="flex flex-col min-h-[100dvh] bg-gray-100">
@@ -29,21 +29,40 @@ export default function LandingPage() {
         <div className="flex items-center">
           <span className="text-xl font-bold text-black">Clinix</span>
         </div>
-        <Link href="/agendamento/scheduler" className="flex items-center justify-center" prefetch={false}>
+        <Link
+          href="/agendamento/scheduler"
+          className="flex items-center justify-center"
+          prefetch={false}
+        >
           <span className="sr-only ">Agendador de Consultas</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link href="/agendamento/home" className="text-sm font-medium hover:underline underline-offset-4 text-neutral-900" prefetch={false}>
+          <Link
+            href="/agendamento/home"
+            className="text-sm font-medium hover:underline underline-offset-4 text-neutral-900"
+            prefetch={false}
+          >
             Home
           </Link>
-          <Link href="/agendamento/sobre-nos" className="text-sm font-medium hover:underline underline-offset-4 text-neutral-900" prefetch={false}>
+          <Link
+            href="/agendamento/sobre-nos"
+            className="text-sm font-medium hover:underline underline-offset-4 text-neutral-900"
+            prefetch={false}
+          >
             Sobre Nós
           </Link>
-          <Link href="/agendamento/profissionais" className="text-sm font-medium hover:underline underline-offset-4 text-neutral-900" prefetch={false}>
+          <Link
+            href="/agendamento/profissionais"
+            className="text-sm font-medium hover:underline underline-offset-4 text-neutral-900"
+            prefetch={false}
+          >
             Profissionais
           </Link>
-          <Link href="/agendamento/agendar-consulta" className="inline-flex h-10 items-center justify-center rounded-md bg-black px-8 text-sm font-medium text-white shadow transition-colors hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-            prefetch={false}>
+          <Link
+            href="/agendamento/agendar-consulta"
+            className="inline-flex h-10 items-center justify-center rounded-md bg-black px-8 text-sm font-medium text-white shadow transition-colors hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            prefetch={false}
+          >
             Agendar Consulta
           </Link>
         </nav>
@@ -58,7 +77,9 @@ export default function LandingPage() {
                     Agende Suas Consultas de Forma Fácil e Rápida
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl text-neutral-900">
-                    Simplifique sua vida com nosso sistema de Agendamento. A qualquer hora, em qualquer lugar. Simples, seguro e feito para você.
+                    Simplifique sua vida com nosso sistema de Agendamento. A
+                    qualquer hora, em qualquer lugar. Simples, seguro e feito
+                    para você.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -85,9 +106,12 @@ export default function LandingPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Nossos Serviços</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                  Nossos Serviços
+                </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Oferecemos uma ampla gama de serviços de saúde para atender às suas necessidades.
+                  Oferecemos uma ampla gama de serviços de saúde para atender às
+                  suas necessidades.
                 </p>
               </div>
             </div>
@@ -97,7 +121,8 @@ export default function LandingPage() {
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold">Cuidados Primários</h3>
                   <p className="text-muted-foreground">
-                    Agende uma consulta com nossos experientes profissionais de cuidados primários.
+                    Agende uma consulta com nossos experientes profissionais de
+                    cuidados primários.
                   </p>
                 </div>
               </div>
@@ -105,14 +130,19 @@ export default function LandingPage() {
                 <StethoscopeIcon className="h-12 w-12 text-primary" />
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold">Cuidados Especializados</h3>
-                  <p className="text-muted-foreground">Acesse nossa rede de especialistas para cuidados médicos avançados.</p>
+                  <p className="text-muted-foreground">
+                    Acesse nossa rede de especialistas para cuidados médicos
+                    avançados.
+                  </p>
                 </div>
               </div>
               <div className="flex flex-col items-center justify-center space-y-4 text-center">
                 <MicroscopeIcon className="h-12 w-12 text-primary" />
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold">Exames Diagnósticos</h3>
-                  <p className="text-muted-foreground">Agende exames laboratoriais e de imagem com facilidade.</p>
+                  <p className="text-muted-foreground">
+                    Agende exames laboratoriais e de imagem com facilidade.
+                  </p>
                 </div>
               </div>
             </div>
@@ -122,9 +152,12 @@ export default function LandingPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">O Que Nossos Pacientes Dizem</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                  O Que Nossos Pacientes Dizem
+                </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Ouça o que nossos pacientes satisfeitos têm a dizer sobre sua experiência com nossos serviços de saúde.
+                  Ouça o que nossos pacientes satisfeitos têm a dizer sobre sua
+                  experiência com nossos serviços de saúde.
                 </p>
               </div>
             </div>
@@ -141,7 +174,8 @@ export default function LandingPage() {
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold">João Silva</h3>
                   <p className="text-muted-foreground">
-                    &quot;A equipe foi incrivelmente amigável e prestativa. Tive uma ótima experiência com minha consulta.&quot;
+                    &quot;A equipe foi incrivelmente amigável e prestativa. Tive
+                    uma ótima experiência com minha consulta.&quot;
                   </p>
                 </div>
               </div>
@@ -157,7 +191,8 @@ export default function LandingPage() {
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold">Maria Santos</h3>
                   <p className="text-muted-foreground">
-                    &quot;Consegui agendar minha consulta online facilmente e o processo foi muito simples.&quot;
+                    &quot;Consegui agendar minha consulta online facilmente e o
+                    processo foi muito simples.&quot;
                   </p>
                 </div>
               </div>
@@ -173,7 +208,9 @@ export default function LandingPage() {
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold">Carlos Oliveira</h3>
                   <p className="text-muted-foreground">
-                    &quot;Os profissionais de saúde foram muito competentes e dedicaram tempo para abordar todas as minhas preocupações.&quot;
+                    &quot;Os profissionais de saúde foram muito competentes e
+                    dedicaram tempo para abordar todas as minhas
+                    preocupações.&quot;
                   </p>
                 </div>
               </div>
@@ -182,18 +219,28 @@ export default function LandingPage() {
         </section>
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-muted-foreground">&copy; 2024 Agendador de Consultas. Todos os direitos reservados.</p>
+        <p className="text-xs text-muted-foreground">
+          &copy; 2024 Agendador de Consultas. Todos os direitos reservados.
+        </p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link href="#" className="text-xs hover:underline underline-offset-4" prefetch={false}>
+          <Link
+            href="#"
+            className="text-xs hover:underline underline-offset-4"
+            prefetch={false}
+          >
             Termos de Serviço
           </Link>
-          <Link href="#" className="text-xs hover:underline underline-offset-4" prefetch={false}>
+          <Link
+            href="#"
+            className="text-xs hover:underline underline-offset-4"
+            prefetch={false}
+          >
             Privacidade
           </Link>
         </nav>
       </footer>
     </div>
-  )
+  );
 }
 
 function HeartPulseIcon(props) {
@@ -213,9 +260,8 @@ function HeartPulseIcon(props) {
       <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
       <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" />
     </svg>
-  )
+  );
 }
-
 
 function MicroscopeIcon(props) {
   return (
@@ -238,9 +284,8 @@ function MicroscopeIcon(props) {
       <path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z" />
       <path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3" />
     </svg>
-  )
+  );
 }
-
 
 function StethoscopeIcon(props) {
   return (
@@ -260,5 +305,5 @@ function StethoscopeIcon(props) {
       <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4" />
       <circle cx="20" cy="10" r="2" />
     </svg>
-  )
+  );
 }
