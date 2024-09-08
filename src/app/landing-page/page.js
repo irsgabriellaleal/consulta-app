@@ -1,6 +1,28 @@
-import Link from "next/link";
+'use client'
 
-export default function Agendamento() {
+import { useState, useEffect } from 'react'
+import Link from "next/link"
+
+export default function LandingPage() {
+  const [users, setUsers] = useState([])
+
+  useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const response = await fetch('/api/users')
+        if (!response.ok) {
+          throw new Error('Falha ao buscar usuários')
+        }
+        const data = await response.json()
+        setUsers(data)
+      } catch (error) {
+        console.error('Erro ao buscar usuários:', error)
+      }
+    }
+
+    fetchUsers()
+  }, [])
+
   return (
     <div className="flex flex-col min-h-[100dvh] bg-gray-100">
       <header className="px-4 lg:px-6 h-14 flex items-center">
@@ -8,7 +30,7 @@ export default function Agendamento() {
           <span className="text-xl font-bold text-black">Clinix</span>
         </div>
         <Link href="/agendamento/scheduler" className="flex items-center justify-center" prefetch={false}>
-          <span className="sr-only ">Appointment Scheduler</span>
+          <span className="sr-only ">Agendador de Consultas</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
           <Link href="/agendamento/home" className="text-sm font-medium hover:underline underline-offset-4 text-neutral-900" prefetch={false}>
@@ -21,7 +43,7 @@ export default function Agendamento() {
             Profissionais
           </Link>
           <Link href="/agendamento/agendar-consulta" className="inline-flex h-10 items-center justify-center rounded-md bg-black px-8 text-sm font-medium text-white shadow transition-colors hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-                    prefetch={false}>
+            prefetch={false}>
             Agendar Consulta
           </Link>
         </nav>
@@ -33,7 +55,7 @@ export default function Agendamento() {
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-neutral-900">
-                    Agende Suas Consultas de Forma Fácil e Rápida 
+                    Agende Suas Consultas de Forma Fácil e Rápida
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl text-neutral-900">
                     Simplifique sua vida com nosso sistema de Agendamento. A qualquer hora, em qualquer lugar. Simples, seguro e feito para você.
@@ -63,9 +85,9 @@ export default function Agendamento() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Our Services</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Nossos Serviços</h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  We offer a wide range of healthcare services to meet your needs.
+                  Oferecemos uma ampla gama de serviços de saúde para atender às suas necessidades.
                 </p>
               </div>
             </div>
@@ -73,24 +95,24 @@ export default function Agendamento() {
               <div className="flex flex-col items-center justify-center space-y-4 text-center">
                 <HeartPulseIcon className="h-12 w-12 text-primary" />
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Primary Care</h3>
+                  <h3 className="text-xl font-bold">Cuidados Primários</h3>
                   <p className="text-muted-foreground">
-                    Schedule an appointment with our experienced primary care providers.
+                    Agende uma consulta com nossos experientes profissionais de cuidados primários.
                   </p>
                 </div>
               </div>
               <div className="flex flex-col items-center justify-center space-y-4 text-center">
                 <StethoscopeIcon className="h-12 w-12 text-primary" />
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Specialty Care</h3>
-                  <p className="text-muted-foreground">Access our network of specialists for advanced medical care.</p>
+                  <h3 className="text-xl font-bold">Cuidados Especializados</h3>
+                  <p className="text-muted-foreground">Acesse nossa rede de especialistas para cuidados médicos avançados.</p>
                 </div>
               </div>
               <div className="flex flex-col items-center justify-center space-y-4 text-center">
                 <MicroscopeIcon className="h-12 w-12 text-primary" />
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Diagnostic Tests</h3>
-                  <p className="text-muted-foreground">Schedule lab tests and imaging appointments with ease.</p>
+                  <h3 className="text-xl font-bold">Exames Diagnósticos</h3>
+                  <p className="text-muted-foreground">Agende exames laboratoriais e de imagem com facilidade.</p>
                 </div>
               </div>
             </div>
@@ -100,9 +122,9 @@ export default function Agendamento() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">What Our Patients Say</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">O Que Nossos Pacientes Dizem</h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Hear from our satisfied patients about their experience with our healthcare services.
+                  Ouça o que nossos pacientes satisfeitos têm a dizer sobre sua experiência com nossos serviços de saúde.
                 </p>
               </div>
             </div>
@@ -117,9 +139,9 @@ export default function Agendamento() {
                   style={{ aspectRatio: "80/80", objectFit: "cover" }}
                 />
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold">John Doe</h3>
+                  <h3 className="text-xl font-bold">João Silva</h3>
                   <p className="text-muted-foreground">
-                    "The staff was incredibly friendly and helpful. I had a\n great experience with my appointment."
+                    &quot;A equipe foi incrivelmente amigável e prestativa. Tive uma ótima experiência com minha consulta.&quot;
                   </p>
                 </div>
               </div>
@@ -133,9 +155,9 @@ export default function Agendamento() {
                   style={{ aspectRatio: "80/80", objectFit: "cover" }}
                 />
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Jane Smith</h3>
+                  <h3 className="text-xl font-bold">Maria Santos</h3>
                   <p className="text-muted-foreground">
-                    "I was able to easily schedule my appointment online and\n the process was seamless."
+                    &quot;Consegui agendar minha consulta online facilmente e o processo foi muito simples.&quot;
                   </p>
                 </div>
               </div>
@@ -149,9 +171,9 @@ export default function Agendamento() {
                   style={{ aspectRatio: "80/80", objectFit: "cover" }}
                 />
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Michael Johnson</h3>
+                  <h3 className="text-xl font-bold">Carlos Oliveira</h3>
                   <p className="text-muted-foreground">
-                    "The healthcare providers were knowledgeable and took the\n time to address all of my concerns."
+                    &quot;Os profissionais de saúde foram muito competentes e dedicaram tempo para abordar todas as minhas preocupações.&quot;
                   </p>
                 </div>
               </div>
@@ -160,13 +182,13 @@ export default function Agendamento() {
         </section>
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-muted-foreground">&copy; 2024 Appointment Scheduler. All rights reserved.</p>
+        <p className="text-xs text-muted-foreground">&copy; 2024 Agendador de Consultas. Todos os direitos reservados.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link href="#" className="text-xs hover:underline underline-offset-4" prefetch={false}>
-            Terms of Service
+            Termos de Serviço
           </Link>
           <Link href="#" className="text-xs hover:underline underline-offset-4" prefetch={false}>
-            Privacy
+            Privacidade
           </Link>
         </nav>
       </footer>

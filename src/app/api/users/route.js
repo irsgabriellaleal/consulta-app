@@ -1,20 +1,21 @@
 import { NextResponse } from "next/server";
-import pool from "@/src/config/database";
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const db = await pool.getConnection();
-    const query = "select * from paciente";
-    const [rows] = await db.execute(query);
-    db.release();
-
-    return NextResponse.json(rows);
+    const users = await prisma.user.findMany();
+    return NextResponse.json(users);
   } catch (error) {
+    console.error('Erro ao buscar usuários:', error);
     return NextResponse.json(
       {
-        error: error,
+        error: 'Erro interno do servidor',
       },
       { status: 500 }
     );
+  } finally {
+    await prisma.$disconnect();
   }
 }
