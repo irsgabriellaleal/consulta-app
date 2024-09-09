@@ -29,6 +29,7 @@ export default function LandingPage() {
         <div className="flex items-center">
           <span className="text-xl font-bold text-black">Clinix</span>
         </div>
+
         <Link
           href="/agendamento/scheduler"
           className="flex items-center justify-center"

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { Button } from "../../components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,20 +10,44 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { LockIcon, MailIcon } from "lucide-react";
+} from "../../components/ui/card";
+import { Checkbox } from "../../components/ui/checkbox";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aqui você adicionaria a lógica de autenticação
-    console.log("Login attempt with:", email, password);
+    setError("");
+
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Armazenar o token no localStorage ou em um estado global
+        localStorage.setItem("token", data.token);
+        // Redirecionar para a página principal ou dashboard
+        router.push("/dashboard");
+      } else {
+        setError(data.error || "Erro ao fazer login");
+      }
+    } catch (error) {
+      console.error("Erro durante o login:", error);
+      setError("Ocorreu um erro ao tentar fazer login");
+    }
   };
 
   return (
@@ -42,7 +67,6 @@ export default function LoginScreen() {
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <div className="relative">
-                  <MailIcon className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                   <Input
                     id="email"
                     placeholder="seu@email.com"
@@ -57,7 +81,6 @@ export default function LoginScreen() {
               <div className="space-y-2">
                 <Label htmlFor="password">Senha</Label>
                 <div className="relative">
-                  <LockIcon className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                   <Input
                     id="password"
                     type="password"
@@ -72,6 +95,7 @@ export default function LoginScreen() {
                 <Checkbox id="remember" />
                 <Label htmlFor="remember">Lembrar-me</Label>
               </div>
+              {error && <p className="text-red-500 text-sm">{error}</p>}
             </div>
             <Button type="submit" className="w-full mt-6">
               Entrar
