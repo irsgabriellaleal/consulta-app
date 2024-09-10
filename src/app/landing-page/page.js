@@ -37,7 +37,7 @@ export default function LandingPage() {
         >
           <span className="sr-only ">Agendador de Consultas</span>
         </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
+        <nav className="ml-auto flex items-center gap-4 sm:gap-6">
           <Link
             href="/agendamento/home"
             className="text-sm font-medium hover:underline underline-offset-4 text-neutral-900"
@@ -85,7 +85,7 @@ export default function LandingPage() {
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Link
-                    href=""
+                    href="/agendamento"
                     className="inline-flex h-10 items-center justify-center rounded-md bg-gray-800 px-8 text-sm font-medium text-white shadow transition-colors hover:bg-black focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                     prefetch={false}
                   >

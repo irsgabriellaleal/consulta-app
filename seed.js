@@ -4,6 +4,7 @@ const prisma = new PrismaClient();
 async function main() {
   const users = [
     {
+      id: 1,
       email: "iris@gmail.com",
       nome: "Iris",
       senha: "123456",
@@ -11,6 +12,7 @@ async function main() {
     },
 
     {
+      id: 2,
       email: "japa@gmail.com",
       nome: "Japa",
       senha: "senha_japa_789",
@@ -18,6 +20,7 @@ async function main() {
     },
 
     {
+      id: 3,
       email: "lucas@gmail.com",
       nome: "Lucas",
       senha: "lucas_senha_456",
@@ -25,6 +28,7 @@ async function main() {
     },
 
     {
+      id: 4,
       email: "joao@gmail.com",
       nome: "João",
       senha: "joao_123_senha",
