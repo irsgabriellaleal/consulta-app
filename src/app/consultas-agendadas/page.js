@@ -17,9 +17,13 @@ import {
   TableCell,
 } from "@/src/components/ui/table";
 import { Button } from "@/src/components/ui/button";
+import { Input } from "@/src/components/ui/input";
 
 export default function ConsultasAgendadas() {
   const [consultas, setConsultas] = useState([]);
+  const [editando, setEditando] = useState(null);
+  const [novaData, setNovaData] = useState("");
+  const [novoHorario, setNovoHorario] = useState("");
 
   useEffect(() => {
     fetchConsultas();
@@ -35,6 +39,33 @@ export default function ConsultasAgendadas() {
       setConsultas(data);
     } catch (error) {
       console.error("Erro ao buscar consultas agendadas:", error);
+    }
+  }
+
+  async function atualizarConsulta(id) {
+    try {
+      const response = await fetch(`/api/consultas-agendadas`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id,
+          data: novaData,
+          horario: novoHorario,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Falha ao atualizar consulta");
+      }
+
+      await fetchConsultas();
+      setEditando(null);
+      setNovaData("");
+      setNovoHorario("");
+    } catch (error) {
+      console.error("Erro ao atualizar consulta:", error);
     }
   }
 
@@ -81,10 +112,45 @@ export default function ConsultasAgendadas() {
             {consultas.map((consulta) => (
               <TableRow key={consulta.id}>
                 <TableCell>{consulta.nomePaciente}</TableCell>
-                <TableCell>{consulta.data}</TableCell>
-                <TableCell>{consulta.horario}</TableCell>
+                <TableCell>
+                  {editando === consulta.id ? (
+                    <Input
+                      type="date"
+                      value={novaData}
+                      onChange={(e) => setNovaData(e.target.value)}
+                    />
+                  ) : (
+                    consulta.data
+                  )}
+                </TableCell>
+                <TableCell>
+                  {editando === consulta.id ? (
+                    <Input
+                      type="time"
+                      value={novoHorario}
+                      onChange={(e) => setNovoHorario(e.target.value)}
+                    />
+                  ) : (
+                    consulta.horario
+                  )}
+                </TableCell>
                 <TableCell>{consulta.especialidade}</TableCell>
                 <TableCell>
+                  {editando === consulta.id ? (
+                    <Button onClick={() => atualizarConsulta(consulta.id)}>
+                      Salvar
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        setEditando(consulta.id);
+                        setNovaData(consulta.data);
+                        setNovoHorario(consulta.horario);
+                      }}
+                    >
+                      Editar
+                    </Button>
+                  )}
                   <Button
                     onClick={() => deletarConsulta(consulta.id)}
                     variant="destructive"

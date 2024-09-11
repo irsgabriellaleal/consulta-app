@@ -40,6 +40,35 @@ export async function GET() {
   }
 }
 
+export async function PUT(request) {
+  try {
+    const { id, data, horario } = await request.json();
+
+    const consultaAtualizada = await prisma.agendamento.update({
+      where: { id: parseInt(id) },
+      data: {
+        data: new Date(data),
+        horario,
+      },
+    });
+
+    return NextResponse.json({
+      message: "Consulta atualizada com sucesso",
+      consulta: consultaAtualizada,
+    });
+  } catch (error) {
+    console.error("Erro ao atualizar consulta:", error);
+    return NextResponse.json(
+      {
+        error: "Erro interno do servidor",
+      },
+      { status: 500 }
+    );
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
 export async function DELETE(request) {
   try {
     const { id } = await request.json();
