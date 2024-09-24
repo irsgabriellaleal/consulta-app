@@ -9,14 +9,12 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/src/components/ui/pop
 import { Button } from "@/src/components/ui/button";
 import { Calendar } from "@/src/components/ui/calendar";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/src/components/ui/select";
-import { Input } from "@/src/components/ui/input";
 import { format } from "date-fns";
 
 export default function AgendamentoPage() {
   const [data, setData] = useState(null);
   const [horario, setHorario] = useState("");
   const [especialidade, setEspecialidade] = useState("");
-  const [usuarioId, setUsuarioId] = useState("");
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -32,14 +30,8 @@ export default function AgendamentoPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!data || !horario || !especialidade || !usuarioId) {
+    if (!data || !horario || !especialidade) {
       alert("Por favor, preencha todos os campos");
-      return;
-    }
-
-    const userId = parseInt(usuarioId);
-    if (isNaN(userId) || userId <= 0) {
-      alert("Por favor, insira um ID de usuário válido");
       return;
     }
 
@@ -53,7 +45,6 @@ export default function AgendamentoPage() {
           data: format(data, "yyyy-MM-dd"),
           horario,
           especialidade,
-          usuarioId: userId,
         }),
       });
 
@@ -128,16 +119,6 @@ export default function AgendamentoPage() {
                   <SelectItem value="pediatria">Pediatria</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="userId">ID do Usuário</Label>
-              <Input
-                type="number"
-                id="userId"
-                value={usuarioId}
-                onChange={(e) => setUsuarioId(e.target.value)}
-                required
-              />
             </div>
           </CardContent>
           <CardFooter>

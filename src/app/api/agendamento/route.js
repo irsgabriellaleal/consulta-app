@@ -1,18 +1,25 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from '@prisma/client';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]/route";
 
 // Inicialize o PrismaClient fora da função de rota
 const prisma = new PrismaClient();
 
 export async function POST(request) {
   try {
-    const { data, horario, especialidade, usuarioId } = await request.json();
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ success: false, error: 'Não autorizado' }, { status: 401 });
+    }
 
-    console.log('Dados recebidos:', { data, horario, especialidade, usuarioId });
+    const { data, horario, especialidade } = await request.json();
+
+    console.log('Dados recebidos:', { data, horario, especialidade });
 
     const usuario = await prisma.user.findUnique({
       where: {
-        id: parseInt(usuarioId),
+        email: session.user.email,
       },
     });
 
@@ -25,7 +32,7 @@ export async function POST(request) {
         data: new Date(data),
         horario,
         especialidade,
-        usuarioId: parseInt(usuarioId),
+        usuarioId: usuario.id,
       },
     });
 
