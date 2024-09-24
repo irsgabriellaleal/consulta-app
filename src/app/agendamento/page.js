@@ -1,38 +1,34 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/src/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/src/components/ui/card";
 import { Label } from "@/src/components/ui/label";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/src/components/ui/popover";
+import { Popover, PopoverTrigger, PopoverContent } from "@/src/components/ui/popover";
 import { Button } from "@/src/components/ui/button";
 import { Calendar } from "@/src/components/ui/calendar";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/src/components/ui/select";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/src/components/ui/select";
 import { Input } from "@/src/components/ui/input";
 import { format } from "date-fns";
 
 export default function AgendamentoPage() {
-  const router = useRouter();
   const [data, setData] = useState(null);
   const [horario, setHorario] = useState("");
   const [especialidade, setEspecialidade] = useState("");
   const [usuarioId, setUsuarioId] = useState("");
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status, router]);
+
+  if (!session) {
+    return null;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();

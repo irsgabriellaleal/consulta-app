@@ -1,113 +1,109 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { Button } from "../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
-import { Checkbox } from "../../components/ui/checkbox";
 import { Input } from "../../components/ui/input";
-import { Label } from "../../components/ui/label";
+import { Loader2, Mail, AlertCircle } from "lucide-react";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isEmailSent, setIsEmailSent] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+      const result = await signIn("email", {
+        email,
+        redirect: false,
+        callbackUrl: "/agendamento",
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Armazenar o token no localStorage ou em um estado global
-        localStorage.setItem("token", data.token);
-        // Redirecionar para a página principal ou dashboard
-        router.push("/dashboard");
+      if (result?.error) {
+        setError("Falha ao enviar o e-mail. Por favor, tente novamente.");
       } else {
-        setError(data.error || "Erro ao fazer login");
+        setIsEmailSent(true);
       }
     } catch (error) {
-      console.error("Erro durante o login:", error);
-      setError("Ocorreu um erro ao tentar fazer login");
+      setError("Ocorreu um erro. Por favor, tente novamente mais tarde.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">
-            Login
-          </CardTitle>
-          <CardDescription className="text-center">
-            Entre com sua conta para acessar o sistema
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <div className="relative">
-                  <Input
-                    id="email"
-                    placeholder="seu@email.com"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Senha</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox id="remember" />
-                <Label htmlFor="remember">Lembrar-me</Label>
-              </div>
-              {error && <p className="text-red-500 text-sm">{error}</p>}
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-neutral-900 to-neutral-800 text-white p-4">
+      <div className="w-full max-w-md space-y-8 bg-neutral-800 p-8 rounded-xl shadow-lg">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold mb-2">Bem-vindo ao Clinix</h1>
+          <p className="text-neutral-400">Entre para acessar sua conta</p>
+        </div>
+
+        {error && (
+          <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded-md flex items-center space-x-2">
+            <AlertCircle size={20} />
+            <p>{error}</p>
+          </div>
+        )}
+
+        {isEmailSent ? (
+          <div className="bg-green-500/10 border border-green-500 text-green-500 px-4 py-3 rounded-md">
+            <p>
+              E-mail de verificação enviado. Verifique sua caixa de entrada.
+            </p>
+          </div>
+        ) : (
+          <form className="space-y-6" onSubmit={handleEmailSubmit}>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium mb-2">
+                Endereço de e-mail
+              </label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="seu@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-neutral-700 border-neutral-600 text-white placeholder-neutral-400 focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
             </div>
-            <Button type="submit" className="w-full mt-6">
-              Entrar
+            <Button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Enviando...
+                </>
+              ) : (
+                <>
+                  <Mail className="mr-2 h-4 w-4" />
+                  Entrar com E-mail
+                </>
+              )}
             </Button>
           </form>
-        </CardContent>
-        <CardFooter className="flex justify-center">
-          <a href="#" className="text-sm text-blue-600 hover:underline">
-            Esqueceu sua senha?
+        )}
+
+        <p className="text-center text-sm text-neutral-400">
+          Ao continuar, você concorda com nossos <br />
+          <a href="#" className="text-blue-400 hover:underline">
+            Termos de Serviço
+          </a>{" "}
+          e{" "}
+          <a href="#" className="text-blue-400 hover:underline">
+            Política de Privacidade
           </a>
-        </CardFooter>
-      </Card>
+          .
+        </p>
+      </div>
     </div>
   );
 }
