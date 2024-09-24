@@ -24,44 +24,37 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-[100dvh] bg-gray-100">
-      <header className="px-4 lg:px-6 h-14 flex items-center">
+    <div className="flex flex-col min-h-[100dvh] bg-gradient-to-b from-blue-50 to-white text-neutral-800">
+      <header className="px-4 lg:px-6 h-20 flex items-center bg-white shadow-sm">
         <div className="flex items-center">
-          <span className="text-xl font-bold text-black">Clinix</span>
-        </div>
+          <span className="text-2xl font-bold text-blue-600">Clinix</span>
+        </div> {/* Adicionei o fechamento da tag div */}
 
-        <Link
-          href="/agendamento/scheduler"
-          className="flex items-center justify-center"
-          prefetch={false}
-        >
-          <span className="sr-only ">Agendador de Consultas</span>
-        </Link>
-        <nav className="ml-auto flex items-center gap-4 sm:gap-6">
+        <nav className="ml-auto flex items-center gap-6 text-neutral-800">
           <Link
             href="/agendamento/home"
-            className="text-sm font-medium hover:underline underline-offset-4 text-neutral-900"
+            className="text-sm font-medium hover:text-blue-600 transition-colors duration-200"
             prefetch={false}
           >
             Home
           </Link>
           <Link
             href="/agendamento/sobre-nos"
-            className="text-sm font-medium hover:underline underline-offset-4 text-neutral-900"
+            className="text-sm font-medium hover:text-blue-600 transition-colors duration-200"
             prefetch={false}
           >
             Sobre Nós
           </Link>
           <Link
             href="/agendamento/profissionais"
-            className="text-sm font-medium hover:underline underline-offset-4 text-neutral-900"
+            className="text-sm font-medium hover:text-blue-600 transition-colors duration-200"
             prefetch={false}
           >
             Profissionais
           </Link>
           <Link
             href="/agendamento"
-            className="inline-flex h-10 items-center justify-center rounded-md bg-black px-8 text-sm font-medium text-white shadow transition-colors hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            className="inline-flex h-12 items-center justify-center rounded-full bg-blue-600 px-8 text-sm font-medium text-white shadow-lg transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
             prefetch={false}
           >
             Agendar Consulta
@@ -69,37 +62,44 @@ export default function LandingPage() {
         </nav>
       </header>
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
+        <section className="w-full py-20 md:py-32 lg:py-20">
           <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-              <div className="flex flex-col justify-center space-y-4">
-                <div className="space-y-2">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-neutral-900">
-                    Agende Suas Consultas de Forma Fácil e Rápida
-                  </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl text-neutral-900">
-                    Simplifique sua vida com nosso sistema de Agendamento. A
-                    qualquer hora, em qualquer lugar. Simples, seguro e feito
-                    para você.
-                  </p>
-                </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
+            <div className="grid gap-12 lg:grid-cols-2 items-center">
+              <div className="flex flex-col justify-center space-y-8">
+                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-gray-900">
+                  Cuide da sua saúde com facilidade e praticidade
+                </h1>
+                <p className="max-w-[600px] text-xl text-gray-600">
+                  Agende suas consultas de forma rápida e segura. Cuidamos de você para que você possa cuidar do que realmente importa.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
                   <Link
                     href="/agendamento"
-                    className="inline-flex h-10 items-center justify-center rounded-md bg-gray-800 px-8 text-sm font-medium text-white shadow transition-colors hover:bg-black focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                    className="inline-flex h-14 items-center justify-center rounded-full bg-blue-600 px-8 text-lg font-medium text-white shadow-lg transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
                     prefetch={false}
                   >
                     Agendar Agora
                   </Link>
+                  <Link
+                    href="/sobre-nos"
+                    className="inline-flex h-14 items-center justify-center rounded-full bg-gray-100 px-8 text-lg font-medium text-gray-900 shadow-lg transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300 focus-visible:ring-offset-2"
+                    prefetch={false}
+                  >
+                    Saiba Mais
+                  </Link>
                 </div>
               </div>
-              <img
-                src="/placeholder.svg"
-                width="550"
-                height="550"
-                alt="Hero"
-                className="mx-auto aspect-video overflow-hidden rounded-xl object-bottom sm:w-full lg:order-last lg:aspect-square"
-              />
+              <div className="relative grid place-items-center">
+                <img
+                  src="background.jpeg"
+                  alt="Profissional de saúde"
+                  className="rounded-2xl shadow-2xl max-w-[400px]"
+                />
+                <div className="absolute -bottom-8 left-6 bg-white p-6 rounded-xl shadow-lg">
+                  <p className="text-3xl font-bold text-blue-600">98%</p>
+                  <p className="text-gray-600">Pacientes satisfeitos</p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -107,7 +107,7 @@ export default function LandingPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
+                <h2 className="text-3xl text-neutral-100 font-bold tracking-tighter sm:text-5xl">
                   Nossos Serviços
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
@@ -120,7 +120,7 @@ export default function LandingPage() {
               <div className="flex flex-col items-center justify-center space-y-4 text-center">
                 <HeartPulseIcon className="h-12 w-12 text-primary" />
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Cuidados Primários</h3>
+                  <h3 className="text-xl text-neutral-100 font-bold">Cuidados Primários</h3>
                   <p className="text-muted-foreground">
                     Agende uma consulta com nossos experientes profissionais de
                     cuidados primários.
@@ -130,7 +130,7 @@ export default function LandingPage() {
               <div className="flex flex-col items-center justify-center space-y-4 text-center">
                 <StethoscopeIcon className="h-12 w-12 text-primary" />
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Cuidados Especializados</h3>
+                  <h3 className="text-xl text-neutral-100 font-bold">Cuidados Especializados</h3>
                   <p className="text-muted-foreground">
                     Acesse nossa rede de especialistas para cuidados médicos
                     avançados.
@@ -140,7 +140,7 @@ export default function LandingPage() {
               <div className="flex flex-col items-center justify-center space-y-4 text-center">
                 <MicroscopeIcon className="h-12 w-12 text-primary" />
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Exames Diagnósticos</h3>
+                  <h3 className="text-xl text-neutral-100 font-bold">Exames Diagnósticos</h3>
                   <p className="text-muted-foreground">
                     Agende exames laboratoriais e de imagem com facilidade.
                   </p>
@@ -219,26 +219,50 @@ export default function LandingPage() {
           </div>
         </section>
       </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-muted-foreground">
-          &copy; 2024 Agendador de Consultas. Todos os direitos reservados.
-        </p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link
-            href="#"
-            className="text-xs hover:underline underline-offset-4"
-            prefetch={false}
-          >
-            Termos de Serviço
-          </Link>
-          <Link
-            href="#"
-            className="text-xs hover:underline underline-offset-4"
-            prefetch={false}
-          >
-            Privacidade
-          </Link>
-        </nav>
+      <footer className="bg-gray-100 py-12">
+        <div className="container px-4 md:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Sobre Nós</h3>
+              <ul className="space-y-2">
+                <li><Link href="#" className="text-gray-600 hover:text-blue-600">Nossa História</Link></li>
+                <li><Link href="#" className="text-gray-600 hover:text-blue-600">Equipe</Link></li>
+                <li><Link href="#" className="text-gray-600 hover:text-blue-600">Carreiras</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Serviços</h3>
+              <ul className="space-y-2">
+                <li><Link href="#" className="text-gray-600 hover:text-blue-600">Consultas</Link></li>
+                <li><Link href="#" className="text-gray-600 hover:text-blue-600">Exames</Link></li>
+                <li><Link href="#" className="text-gray-600 hover:text-blue-600">Especialidades</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Suporte</h3>
+              <ul className="space-y-2">
+                <li><Link href="#" className="text-gray-600 hover:text-blue-600">FAQ</Link></li>
+                <li><Link href="#" className="text-gray-600 hover:text-blue-600">Contato</Link></li>
+                <li><Link href="#" className="text-gray-600 hover:text-blue-600">Política de Privacidade</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Siga-nos</h3>
+              <div className="flex space-x-4">
+                <a href="#" className="text-gray-600 hover:text-blue-600">
+                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
+                  </svg>
+                </a>
+                <a href="#" className="text-gray-600 hover:text-blue-600">
+                  <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
   );
