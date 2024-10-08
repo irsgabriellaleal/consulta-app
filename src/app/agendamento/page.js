@@ -11,18 +11,18 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/src/components/ui/card";
-import { Button } from "@/src/components/ui/button";
-import { Calendar } from "@/src/components/ui/calendar";
+} from "@src/components/ui/card";
+import { Button } from "@src/components/ui/button";
+import { Calendar } from "@src/components/ui/calendar";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/src/components/ui/select";
-import { Label } from "@/src/components/ui/label";
-import { Textarea } from "@/src/components/ui/textarea";
+} from "@src/components/ui/select";
+import { Label } from "@src/components/ui/label";
+import { Textarea } from "@src/components/ui/textarea";
 import { CalendarIcon, Clock, Stethoscope, FileText } from "lucide-react";
 
 export default function AgendamentoPage() {
