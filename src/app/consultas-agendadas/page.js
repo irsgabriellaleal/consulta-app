@@ -9,7 +9,7 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/src/components/ui/card";
+} from "@src/components/ui/card";
 import {
   Table,
   TableHeader,
@@ -17,9 +17,9 @@ import {
   TableHead,
   TableBody,
   TableCell,
-} from "@/src/components/ui/table";
-import { Button } from "@/src/components/ui/button";
-import { Input } from "@/src/components/ui/input";
+} from "@src/components/ui/table";
+import { Button } from "@src/components/ui/button";
+import { Input } from "@src/components/ui/input";
 import { Calendar, Clock, Edit2, Trash2, PlusCircle, Home } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";

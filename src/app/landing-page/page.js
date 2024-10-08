@@ -46,7 +46,7 @@ export default function LandingPage() {
             Sobre Nós
           </Link>
           <Link
-            href="/agendamento/profissionais"
+            href="/profissionais"
             className="text-sm font-medium hover:text-blue-600 transition-colors duration-200"
             prefetch={false}
           >
