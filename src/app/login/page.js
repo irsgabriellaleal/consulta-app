@@ -10,12 +10,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../..
 import { Loader2, Mail, AlertCircle } from "lucide-react";
 
 export default function LoginScreen() {
+  const [name, setName] = useState("")
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
   const router = useRouter();
+  const [isLogin, setIsLogin] = useState(true)
   const { data: session, status } = useSession();
+
+  const toggleView = () => setIsLogin(!isLogin)
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -54,9 +58,9 @@ export default function LoginScreen() {
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-neutral-900 to-neutral-800 text-white">
       <Card className="w-full max-w-md bg-neutral-800">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">{isLogin ? 'Login' : 'Cadastro'}</CardTitle>
           <CardDescription className="text-center text-neutral-400">
-            Entre com seu email para receber um link de acesso
+            {isLogin ? 'Entre com seu email para receber um link de acesso' : 'Cadastre-se para acessar o sistema'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -73,6 +77,20 @@ export default function LoginScreen() {
           ) : (
             <form onSubmit={handleSubmit}>
               <div className="space-y-4">
+                {!isLogin && (
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Nome</Label>
+                    <Input
+                      id="name"
+                      placeholder="Nome"
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                      className="bg-neutral-700 border-neutral-600 text-white placeholder-neutral-400 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                  </div>
+                )}
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
@@ -98,10 +116,14 @@ export default function LoginScreen() {
                   ) : (
                     <>
                       <Mail className="mr-2 h-4 w-4" />
-                      Enviar link de acesso
+                      {isLogin ? 'Enviar link de acesso' : 'Criar conta'}
                     </>
                   )}
                 </Button>
+
+                <button onClick={toggleView} className="text-sm text-blue-400 hover:text-blue-500">
+                  {isLogin ? 'Não tem uma conta? Cadastre-se' : 'Já tem uma conta? Faça login'}
+                </button>
               </div>
             </form>
           )}

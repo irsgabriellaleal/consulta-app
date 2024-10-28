@@ -19,6 +19,7 @@ export function DoctorCard({ professional }) {
 
   const router = useRouter();
 
+
   const handleScheduleAppointment = async () => {
     try {
       const response = await fetch("/api/agendamento", {
@@ -30,6 +31,7 @@ export function DoctorCard({ professional }) {
           data: format(selectedDate, "yyyy-MM-dd"),
           horario: selectedTime,
           especialidade: professional.especialidade,
+          nomeMedico: professional.nome
         }),
       });
 

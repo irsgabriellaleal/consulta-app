@@ -21,7 +21,8 @@ export async function GET() {
     const consultasFormatadas = consultasAgendadas.map((consulta) => ({
       id: consulta.id,
       nomePaciente: consulta.usuario.nome,
-      data: consulta.data.toISOString().split("T")[0], // Formato YYYY-MM-DD
+      nomeMedico: consulta.nomeMedico,
+      data: consulta.data.toISOString().split("T")[0],
       horario: consulta.horario,
       especialidade: consulta.especialidade,
     }));

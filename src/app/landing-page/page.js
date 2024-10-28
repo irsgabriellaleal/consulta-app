@@ -53,7 +53,7 @@ export default function LandingPage() {
             Profissionais
           </Link>
           <Link
-            href="/agendamento"
+            href="/login"
             className="inline-flex h-12 items-center justify-center rounded-full bg-blue-600 px-8 text-sm font-medium text-white shadow-lg transition-colors hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
             prefetch={false}
           >

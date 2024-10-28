@@ -13,9 +13,9 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Não autorizado' }, { status: 401 });
     }
 
-    const { data, horario, especialidade } = await request.json();
+    const { data, horario, especialidade, nomeMedico } = await request.json();
 
-    console.log('Dados recebidos:', { data, horario, especialidade });
+    console.log('Dados recebidos:', { data, horario, especialidade, nomeMedico });
 
     const usuario = await prisma.user.findUnique({
       where: {
@@ -33,6 +33,7 @@ export async function POST(request) {
         horario,
         especialidade,
         usuarioId: usuario.id,
+        nomeMedico,
       },
     });
 
