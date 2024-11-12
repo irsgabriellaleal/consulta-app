@@ -14,7 +14,7 @@ model User {
   id              Int           @id @default(autoincrement())
   email           String        @unique
   nome            String
-  senha           String?       // Torne a senha opcional
+  senha           String?       
   dataNascimento  DateTime
   criadoEm        DateTime      @default(now())
   atualizadoEm    DateTime      @updatedAt
@@ -23,6 +23,7 @@ model User {
   image           String?
   accounts        Account[]
   sessions        Session[]
+  planos          UserPlan[]   
 }
 
 model Agendamento {
@@ -33,6 +34,8 @@ model Agendamento {
   nomeMedico      String?
   usuario         User     @relation(fields: [usuarioId], references: [id])
   usuarioId       Int
+  precoOriginal   Decimal? @db.Decimal(10,2)
+  precoFinal      Decimal? @db.Decimal(10,2)
   criadoEm        DateTime @default(now())
   atualizadoEm    DateTime @updatedAt
 
@@ -80,4 +83,32 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Plan {
+  id                Int         @id @default(autoincrement())
+  nome             String
+  preco            Decimal     @db.Decimal(10,2)
+  descontoConsulta Int
+  beneficios       Json
+  isPopular        Boolean     @default(false)
+  criadoEm         DateTime    @default(now())
+  atualizadoEm     DateTime    @updatedAt
+  usuarios         UserPlan[]  
+}
+
+model UserPlan {
+  id              Int       @id @default(autoincrement())
+  userId          Int
+  planId          Int
+  status          String    // 'active', 'cancelled', 'pending'
+  dataInicio      DateTime  @default(now())
+  dataFim         DateTime?
+  criadoEm        DateTime  @default(now())
+  atualizadoEm    DateTime  @updatedAt
+  user            User      @relation(fields: [userId], references: [id])
+  plan            Plan      @relation(fields: [planId], references: [id])
+
+  @@index([userId])
+  @@index([planId])
 }
