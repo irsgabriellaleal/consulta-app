@@ -414,136 +414,187 @@ export default function Medicamentos() {
                     Adicionar Medicamento
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="bg-[#1C1C1F] border-neutral-800 text-white max-w-2xl p-0 gap-0">
-                  <DialogHeader className="p-6 border-b border-neutral-800">
-                    <DialogTitle className="text-2xl">Novo Medicamento</DialogTitle>
-                    <p className="text-neutral-400 text-sm">Preencha as informações do medicamento</p>
+                <DialogContent className="bg-[#1C1C1F] border-neutral-800 text-white max-w-2xl p-0">
+                  {/* Header com ícone e descrição */}
+                  <DialogHeader className="p-6 border-b border-neutral-800 space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-blue-500/10 p-3 rounded-xl">
+                        <Pill className="w-6 h-6 text-blue-500" />
+                      </div>
+                      <div>
+                        <DialogTitle className="text-2xl">Novo Medicamento</DialogTitle>
+                        <p className="text-sm text-neutral-400">Preencha as informações para adicionar um novo medicamento</p>
+                      </div>
+                    </div>
                   </DialogHeader>
 
                   <form onSubmit={handleSubmit} className="space-y-6 p-6">
-                    {/* Divisão em 2 colunas */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* Coluna 1 */}
-                      <div className="space-y-4">
-                        <div>
-                          <Label htmlFor="nome" className="text-neutral-200">Nome do Medicamento</Label>
-                          <Input
-                            id="nome"
-                            value={formData.nome}
-                            onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                            required
-                            className="bg-neutral-800 border-neutral-700 mt-1.5 h-11"
-                            placeholder="Ex: Diazepan"
-                          />
+                    {/* Seção Principal */}
+                    <div className="space-y-6">
+                      {/* Nome e Status - Linha 1 */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-neutral-200">Nome do Medicamento</Label>
+                          <div className="relative">
+                            <Pill className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-500" />
+                            <Input
+                              value={formData.nome}
+                              onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
+                              className="bg-neutral-800 border-neutral-700 pl-10"
+                              placeholder="Ex: Diazepan"
+                            />
+                          </div>
                         </div>
-
-                        <div>
-                          <Label htmlFor="dosagem" className="text-neutral-200">Dosagem</Label>
-                          <Input
-                            id="dosagem"
-                            value={formData.dosagem}
-                            onChange={(e) => setFormData({ ...formData, dosagem: e.target.value })}
-                            placeholder="Ex: 500mg"
-                            required
-                            className="bg-neutral-800 border-neutral-700 mt-1.5 h-11"
-                          />
-                        </div>
-
-                        <div>
-                          <Label htmlFor="status" className="text-neutral-200">Status</Label>
+                        <div className="space-y-2">
+                          <Label className="text-neutral-200">Status</Label>
                           <select
-                            id="status"
                             value={formData.status}
                             onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                            className="w-full bg-neutral-800 border border-neutral-700 rounded-md mt-1.5 h-11 px-3 text-white"
-                            required
+                            className="w-full bg-neutral-800 border border-neutral-700 rounded-md h-10 px-3 text-white focus:ring-2 focus:ring-blue-500"
                           >
-                            <option value="ativo">Ativo</option>
-                            <option value="pausado">Pausado</option>
-                            <option value="finalizado">Finalizado</option>
+                            <option value="ativo" className="bg-neutral-800">Ativo</option>
+                            <option value="pausado" className="bg-neutral-800">Pausado</option>
+                            <option value="finalizado" className="bg-neutral-800">Finalizado</option>
                           </select>
                         </div>
                       </div>
 
-                      {/* Coluna 2 */}
-                      <div className="space-y-4">
-                        <div>
-                          <Label htmlFor="frequencia" className="text-neutral-200">Frequência</Label>
+                      {/* Dosagem e Frequência - Linha 2 */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-neutral-200">Dosagem</Label>
                           <Input
-                            id="frequencia"
+                            value={formData.dosagem}
+                            onChange={(e) => setFormData({ ...formData, dosagem: e.target.value })}
+                            className="bg-neutral-800 border-neutral-700"
+                            placeholder="Ex: 500mg"
+                          />
+                          {/* Sugestões de dosagem comuns */}
+                          <div className="flex gap-2 mt-2">
+                            {['100mg', '250mg', '500mg'].map((dose) => (
+                              <button
+                                type="button"
+                                key={dose}
+                                onClick={() => setFormData({ ...formData, dosagem: dose })}
+                                className="px-2 py-1 text-xs bg-neutral-700 rounded hover:bg-neutral-600 text-white"
+                              >
+                                {dose}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-neutral-200">Frequência</Label>
+                          <Input
                             value={formData.frequencia}
                             onChange={(e) => setFormData({ ...formData, frequencia: e.target.value })}
+                            className="bg-neutral-800 border-neutral-700"
                             placeholder="Ex: 2x ao dia"
-                            required
-                            className="bg-neutral-800 border-neutral-700 mt-1.5 h-11"
                           />
+                          {/* Sugestões de frequência comuns */}
+                          <div className="flex gap-2 mt-2">
+                            {['1x ao dia', '2x ao dia', '3x ao dia', '12/12h'].map((freq) => (
+                              <button
+                                type="button"
+                                key={freq}
+                                onClick={() => setFormData({ ...formData, frequencia: freq })}
+                                className="px-2 py-1 text-xs bg-neutral-700 rounded hover:bg-neutral-600 text-white"
+                              >
+                                {freq}
+                              </button>
+                            ))}
+                          </div>
                         </div>
+                      </div>
 
-                        <div>
-                          <Label htmlFor="horarios" className="text-neutral-200">Horários</Label>
+                      {/* Horários - Linha 3 */}
+                      <div className="space-y-2">
+                        <Label className="text-neutral-200">Horários</Label>
+                        <div className="relative">
+                          <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-500" />
                           <Input
-                            id="horarios"
                             value={formData.horarios}
                             onChange={(e) => setFormData({ ...formData, horarios: e.target.value })}
+                            className="bg-neutral-800 border-neutral-700 pl-10"
                             placeholder="Ex: 08:00, 20:00"
-                            required
-                            className="bg-neutral-800 border-neutral-700 mt-1.5 h-11"
                           />
                         </div>
+                        {/* Sugestões de horários comuns */}
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {['08:00', '12:00', '20:00', '08:00, 20:00', '08:00, 16:00, 00:00'].map((time) => (
+                            <button
+                              type="button"
+                              key={time}
+                              onClick={() => setFormData({ ...formData, horarios: time })}
+                              className="px-2 py-1 text-xs bg-neutral-700 rounded hover:bg-neutral-600 text-white"
+                            >
+                              {time}
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Datas em linha */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <Label htmlFor="dataInicio" className="text-neutral-200">Data de Início</Label>
-                        <Input
-                          id="dataInicio"
-                          type="date"
-                          value={formData.dataInicio}
-                          onChange={(e) => setFormData({ ...formData, dataInicio: e.target.value })}
-                          required
-                          className="bg-neutral-800 border-neutral-700 mt-1.5 h-11"
+                      {/* Datas - Linha 4 */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-neutral-200">
+                            Data de Início
+                            <span className="text-blue-500 ml-1">*</span>
+                          </Label>
+                          <div className="relative">
+                            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-500" />
+                            <Input
+                              type="date"
+                              value={formData.dataInicio}
+                              onChange={(e) => setFormData({ ...formData, dataInicio: e.target.value })}
+                              className="bg-neutral-800 border-neutral-700 pl-10"
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-neutral-200 flex items-center gap-2">
+                            Data de Término
+                            <span className="text-xs text-neutral-500">(Opcional)</span>
+                          </Label>
+                          <div className="relative">
+                            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-500" />
+                            <Input
+                              type="date"
+                              value={formData.dataFim}
+                              onChange={(e) => setFormData({ ...formData, dataFim: e.target.value })}
+                              className="bg-neutral-800 border-neutral-700 pl-10"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Observações */}
+                      <div className="space-y-2">
+                        <Label className="text-neutral-200">Observações</Label>
+                        <textarea
+                          value={formData.observacoes}
+                          onChange={(e) => setFormData({ ...formData, observacoes: e.target.value })}
+                          className="w-full bg-neutral-800 border border-neutral-700 rounded-md p-3 text-white h-24 resize-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Adicione informações importantes sobre o medicamento..."
                         />
                       </div>
-                      <div>
-                        <Label htmlFor="dataFim" className="text-neutral-200">Data de Término (opcional)</Label>
-                        <Input
-                          id="dataFim"
-                          type="date"
-                          value={formData.dataFim}
-                          onChange={(e) => setFormData({ ...formData, dataFim: e.target.value })}
-                          className="bg-neutral-800 border-neutral-700 mt-1.5 h-11"
-                        />
-                      </div>
                     </div>
 
-                    {/* Observações em largura total */}
-                    <div>
-                      <Label htmlFor="observacoes" className="text-neutral-200">Observações</Label>
-                      <textarea
-                        id="observacoes"
-                        value={formData.observacoes}
-                        onChange={(e) => setFormData({ ...formData, observacoes: e.target.value })}
-                        placeholder="Observações adicionais sobre o medicamento..."
-                        className="w-full bg-neutral-800 border border-neutral-700 rounded-md mt-1.5 p-3 text-white h-24 resize-none"
-                      />
-                    </div>
-
-                    {/* Botões em um card footer */}
-                    <div className="flex items-center justify-end gap-3 pt-4 border-t border-neutral-800">
+                    {/* Footer com Botões */}
+                    <div className="flex items-center justify-between pt-6 border-t border-neutral-800">
                       <Button
                         type="button"
-                        variant="outline"
+                        variant="ghost"
                         onClick={() => setIsDialogOpen(false)}
-                        className="bg-transparent border-neutral-700 text-neutral-300 hover:bg-neutral-800"
+                        className="text-neutral-400 hover:text-white"
                       >
                         Cancelar
                       </Button>
                       <Button
                         type="submit"
-                        className="bg-blue-600 hover:bg-blue-700"
                         disabled={isLoading}
+                        className="bg-blue-600 hover:bg-blue-700 px-8"
                       >
                         {isLoading ? (
                           <>
