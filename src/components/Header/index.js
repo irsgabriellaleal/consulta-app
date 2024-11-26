@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import {
   UserCircle,
   Calendar,
@@ -51,8 +51,8 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled
-          ? 'bg-gray-900/90 backdrop-blur-md shadow-lg'
-          : 'bg-gray-900'
+        ? 'bg-gray-900/90 backdrop-blur-md shadow-lg'
+        : 'bg-gray-900'
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -75,8 +75,8 @@ export default function Header() {
                 key={item.name}
                 href={item.href}
                 className={`text-sm font-medium transition-all duration-200 relative group ${pathname === item.href
-                    ? 'text-blue-400'
-                    : 'text-gray-300 hover:text-blue-400'
+                  ? 'text-blue-400'
+                  : 'text-gray-300 hover:text-blue-400'
                   }`}
                 prefetch={false}
               >
@@ -156,7 +156,7 @@ export default function Header() {
 
                     <div className="border-t border-gray-700 mt-2 pt-2">
                       <button
-                        onClick={() => {/* Implement logout */ }}
+                        onClick={() => signOut({ callbackUrl: "/" })}
                         className="flex items-center gap-2 px-4 py-2 text-sm text-red-400 
                           hover:bg-gray-700 hover:text-red-300 transition-colors w-full"
                       >
