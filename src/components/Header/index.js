@@ -43,7 +43,7 @@ export default function Header() {
   const profileMenuItems = [
     { name: 'Meu Perfil', href: '/dashboard', icon: User },
     { name: 'Minhas Consultas', href: '/dashboard/consultas', icon: Calendar },
-    { name: 'Resultados', href: '/dashboard/resultados', icon: FileText },
+    { name: 'Meus medicamentos', href: '/medicamentos', icon: FileText },
     { name: 'Histórico', href: '/dashboard/historico', icon: Heart },
     { name: 'Configurações', href: '/dashboard/configuracoes', icon: Settings },
   ];

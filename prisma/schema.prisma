@@ -24,6 +24,25 @@ model User {
   accounts        Account[]
   sessions        Session[]
   planos          UserPlan[]   
+  medicamentos   Medicamento[]
+}
+
+model Medicamento {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  nome        String
+  dosagem     String
+  frequencia  String
+  horarios    Json      
+  dataInicio  DateTime
+  dataFim     DateTime?
+  observacoes String?
+  status      String    @default("ativo") // ativo, pausado, finalizado
+  criadoEm    DateTime  @default(now())
+  atualizadoEm DateTime @updatedAt
+  usuario     User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model Agendamento {
