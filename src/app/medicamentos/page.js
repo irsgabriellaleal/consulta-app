@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../../components/ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../../components/ui/dropdown-menu";
 import {
   Pill,
@@ -26,7 +27,10 @@ import {
   Search,
   PauseCircle,
   XCircle,
-  Activity
+  Activity,
+  Pencil,
+  Trash,
+  FileText
 } from "lucide-react";
 import { format, isToday, isTomorrow, addDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -41,6 +45,9 @@ export default function Medicamentos() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [filtroStatus, setFiltroStatus] = useState('todos');
   const [medicamentosFiltrados, setMedicamentosFiltrados] = useState([]);
+  const [selectedMed, setSelectedMed] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [formData, setFormData] = useState({
     nome: "",
     dosagem: "",
@@ -225,6 +232,54 @@ export default function Medicamentos() {
 
       return proximaDoseAtual < proximaDoseProximo ? atual : proximo;
     }, null);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`/api/medicamentos/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao deletar medicamento');
+      }
+
+      await fetchMedicamentos();
+      setShowDeleteAlert(false);
+      setSelectedMed(null);
+    } catch (error) {
+      setError("Erro ao deletar medicamento");
+    }
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`/api/medicamentos/${selectedMed.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          horarios: formData.horarios.split(",").map(h => h.trim()),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao atualizar medicamento');
+      }
+
+      await fetchMedicamentos();
+      setIsEditMode(false);
+      setSelectedMed(null);
+    } catch (error) {
+      setError("Erro ao atualizar medicamento");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -623,7 +678,8 @@ export default function Medicamentos() {
                 layout
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.2 }}
-                className="group bg-[#1C1C1F] rounded-2xl p-6 border border-neutral-800 hover:border-blue-500/50"
+                onClick={() => setSelectedMed(med)}
+                className="group bg-[#1C1C1F] rounded-2xl cursor-pointer p-6 border border-neutral-800 hover:border-blue-500/50"
               >
                 {/* Cabeçalho do Card */}
                 <div className="flex items-center justify-between mb-4">
@@ -717,6 +773,177 @@ export default function Medicamentos() {
               </motion.div>
             ))}
           </div>
+
+          <Dialog
+            open={selectedMed !== null}
+            onOpenChange={() => {
+              setSelectedMed(null);
+              setIsEditMode(false);
+            }}
+          >
+            <DialogContent className="bg-[#1C1C1F] border-neutral-800 text-white max-w-2xl p-0">
+              {selectedMed && (
+                <>
+                  {/* Header */}
+                  <DialogHeader className="p-6 border-b border-neutral-800">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="bg-blue-600 p-3 rounded-xl">
+                          <Pill className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <DialogTitle className="text-2xl">{selectedMed.nome}</DialogTitle>
+                          <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${getStatusStyles(selectedMed.status)}`}>
+                            {selectedMed.status.charAt(0).toUpperCase() + selectedMed.status.slice(1)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </DialogHeader>
+
+                  {/* Conteúdo */}
+                  <div className="p-6 space-y-8">
+                    {/* Informações Principais */}
+                    <div className="grid grid-cols-2 gap-6">
+                      <div className="bg-neutral-800/50 p-4 rounded-xl">
+                        <h3 className="text-sm font-medium text-neutral-400 mb-1">Dosagem</h3>
+                        <p className="text-lg font-medium text-white">{selectedMed.dosagem}</p>
+                      </div>
+                      <div className="bg-neutral-800/50 p-4 rounded-xl">
+                        <h3 className="text-sm font-medium text-neutral-400 mb-1">Frequência</h3>
+                        <p className="text-lg font-medium text-white">{selectedMed.frequencia}</p>
+                      </div>
+                    </div>
+
+                    {/* Horários */}
+                    <div className="bg-neutral-800/50 p-4 rounded-xl">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Clock className="w-5 h-5 text-blue-500" />
+                        <h3 className="font-medium text-white">Horários de Uso</h3>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedMed.horarios.map((horario) => (
+                          <span key={horario} className="px-3 py-1 bg-neutral-700 rounded-full text-sm text-white">
+                            {horario}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Período do Tratamento */}
+                    <div className="bg-neutral-800/50 p-4 rounded-xl">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Calendar className="w-5 h-5 text-blue-500" />
+                        <h3 className="font-medium text-white">Período do Tratamento</h3>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-sm text-neutral-400">Início</p>
+                          <p className="text-white">
+                            {format(new Date(selectedMed.dataInicio), "dd 'de' MMMM',' yyyy", { locale: ptBR })}
+                          </p>
+                        </div>
+                        {selectedMed.dataFim && (
+                          <div>
+                            <p className="text-sm text-neutral-400">Término</p>
+                            <p className="text-white">
+                              {format(new Date(selectedMed.dataFim), "dd 'de' MMMM',' yyyy", { locale: ptBR })}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Próxima Dose */}
+                    <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 p-4 rounded-xl border border-blue-500/20">
+                      <div className="flex items-center gap-3">
+                        <div className="bg-blue-500/20 p-2 rounded-lg">
+                          <Bell className="w-5 h-5 text-blue-500" />
+                        </div>
+                        <div>
+                          <h3 className="font-medium text-white">Próxima Dose</h3>
+                          <p className="text-sm text-neutral-300">
+                            {getTempoAteProximaDose(getProximaDose(selectedMed.horarios))}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Progresso */}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-neutral-400">Progresso do Tratamento</span>
+                        <span className="text-white font-medium">
+                          {calcularProgresso(selectedMed.dataInicio, selectedMed.dataFim)}%
+                        </span>
+                      </div>
+                      <div className="h-2 bg-neutral-800 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${calcularProgresso(selectedMed.dataInicio, selectedMed.dataFim)}%` }}
+                          className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Observações */}
+                    <div>
+                      {selectedMed.observacoes && (
+                        <div className="bg-neutral-800/50 p-4 rounded-xl">
+                          <div className="flex items-center gap-2 mb-3">
+                            <FileText className="w-5 h-5 text-blue-500" />
+                            <h3 className="font-medium text-white">Observações</h3>
+                          </div>
+                          <p className="text-neutral-300 text-sm whitespace-pre-line">
+                            {selectedMed.observacoes}
+                          </p>
+                        </div>
+                      )}
+                      <div className="flex gap-2 pt-4">
+                        <Button
+                          onClick={() => setIsEditMode(true)}
+                          variant="outline"
+                          className="flex-1 bg-neutral-800 hover:bg-neutral-700 border-0"
+                        >
+                          <Pencil className="w-4 h-4 mr-2" />
+                          Editar
+                        </Button>
+                        <Button
+                          onClick={() => setShowDeleteAlert(true)}
+                          variant="outline"
+                          className="flex-1 bg-red-500/10 hover:bg-red-500/20 text-red-500 border-0"
+                        >
+                          <Trash className="w-4 h-4 mr-2" />
+                          Remover
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </DialogContent>
+          </Dialog>
+
+          <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+            <AlertDialogContent className="bg-neutral-900 border-neutral-800">
+              <AlertDialogHeader>
+                <AlertDialogTitle>Remover Medicamento</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Tem certeza que deseja remover este medicamento?
+                  Esta ação não pode ser desfeita.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="bg-neutral-800">Cancelar</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => handleDelete(selectedMed?.id)}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  Remover
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
 
           {/* Mensagem de Erro */}
           {error && (
