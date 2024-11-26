@@ -36,6 +36,7 @@ export default function Medicamentos() {
   const [medicamentos, setMedicamentos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingStatus, setLoadingStatus] = useState(null);
+  const [medicamentosAtivos, setMedicamentosAtivos] = useState([]);
   const [error, setError] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [filtroStatus, setFiltroStatus] = useState('todos');
@@ -63,6 +64,7 @@ export default function Medicamentos() {
       const response = await fetch("/api/medicamentos");
       const data = await response.json();
       setMedicamentos(data);
+      setMedicamentosAtivos(data.filter(med => med.status === 'ativo'));
       setIsLoading(false);
     } catch (error) {
       setError("Erro ao carregar medicamentos");
@@ -105,6 +107,7 @@ export default function Medicamentos() {
       setIsLoading(false);
     }
   };
+
   const handleStatusChange = async (id, newStatus) => {
     setLoadingStatus(id);
     try {
@@ -121,7 +124,7 @@ export default function Medicamentos() {
         throw new Error(error.error || 'Erro ao atualizar status');
       }
 
-      await fetchMedicamentos(); // Recarrega a lista
+      await fetchMedicamentos(); // Isso já vai atualizar os medicamentos ativos
     } catch (error) {
       setError(error.message);
       console.error('Erro completo:', error);
@@ -144,44 +147,84 @@ export default function Medicamentos() {
   };
 
   const getProximaDose = (horarios) => {
+    if (!horarios || horarios.length === 0) return null;
+
     const agora = new Date();
     const horaAtual = agora.getHours() * 60 + agora.getMinutes();
 
-    return horarios.reduce((proxima, horario) => {
-      const [hora, minuto] = horario.split(':');
-      const horarioMinutos = parseInt(hora) * 60 + parseInt(minuto);
+    // Converte todos os horários para minutos desde meia-noite
+    const horariosEmMinutos = horarios.map(horario => {
+      const [horas, minutos] = horario.split(':').map(Number);
+      return horas * 60 + minutos;
+    });
 
-      if (horarioMinutos > horaAtual && (!proxima || horarioMinutos < proxima)) {
-        return horarioMinutos;
-      }
-      return proxima;
-    }, null);
+    // Encontra o próximo horário
+    const proximoHorario = horariosEmMinutos.find(horario => horario > horaAtual);
+
+    // Se não encontrou próximo horário hoje, retorna o primeiro horário do dia seguinte
+    return proximoHorario || horariosEmMinutos[0];
   };
 
   const getTempoAteProximaDose = (proximaDoseMinutos) => {
-    if (!proximaDoseMinutos) return "Próxima dose amanhã";
+    if (!proximaDoseMinutos) return "Sem horários definidos";
 
     const agora = new Date();
     const horaAtual = agora.getHours() * 60 + agora.getMinutes();
-    const diferenca = proximaDoseMinutos - horaAtual;
+
+    let diferenca = proximaDoseMinutos - horaAtual;
+
+    // Se a diferença é negativa, significa que é para o próximo dia
+    if (diferenca <= 0) {
+      diferenca = (24 * 60) + diferenca; // Adiciona 24 horas em minutos
+    }
 
     const horas = Math.floor(diferenca / 60);
     const minutos = diferenca % 60;
 
-    if (horas > 0) {
-      return `Em ${horas}h${minutos > 0 ? ` e ${minutos}min` : ''}`;
+    if (horas === 0) {
+      return `Em ${minutos} minutos`;
+    } else if (minutos === 0) {
+      return `Em ${horas}h`;
+    } else {
+      return `Em ${horas}h e ${minutos}min`;
     }
-    return `Em ${minutos} minutos`;
   };
 
   const calcularProgresso = (dataInicio, dataFim) => {
-    if (!dataFim) return 75; // Valor padrão para tratamentos sem data fim
     const inicio = new Date(dataInicio);
-    const fim = new Date(dataFim);
     const hoje = new Date();
-    const total = fim - inicio;
-    const atual = hoje - inicio;
-    return Math.min(Math.round((atual / total) * 100), 100);
+
+    if (!dataFim) {
+      // Se não tem data fim, calcula baseado em 30 dias por padrão
+      const totalDias = 30;
+      const diasPassados = Math.floor((hoje - inicio) / (1000 * 60 * 60 * 24));
+      return Math.min(Math.round((diasPassados / totalDias) * 100), 100);
+    }
+
+    const fim = new Date(dataFim);
+    const totalDuracao = fim - inicio;
+    const tempoPassado = hoje - inicio;
+
+    const progresso = Math.round((tempoPassado / totalDuracao) * 100);
+    return Math.min(Math.max(progresso, 0), 100); // Garante que fique entre 0 e 100
+  };
+
+  const getProximoMedicamento = (medicamentos) => {
+    if (!medicamentos || medicamentos.length === 0) return null;
+
+    const medicamentosAtivos = medicamentos.filter(med => med.status === 'ativo');
+
+    if (medicamentosAtivos.length === 0) return null;
+
+    return medicamentosAtivos.reduce((proximo, atual) => {
+      const proximaDoseAtual = getProximaDose(atual.horarios);
+
+      if (!proximo) return atual;
+
+      const proximaDoseProximo = getProximaDose(proximo.horarios);
+
+      return proximaDoseAtual < proximaDoseProximo ? atual : proximo;
+    }, null);
   };
 
   useEffect(() => {
@@ -261,15 +304,33 @@ export default function Medicamentos() {
                   <Clock className="w-5 h-5 text-purple-500" />
                 </div>
               </div>
-              <div className="mt-2">
-                <p className="text-4xl font-bold text-white">
-                  {medicamentos[0]?.horarios[0]}
-                </p>
-                <p className="text-neutral-500 text-sm mt-1">
-                  {medicamentos[0]?.horarios[0] &&
-                    getTempoAteProximaDose(getProximaDose(medicamentos[0].horarios))}
-                </p>
-              </div>
+              {(() => {
+                const proximoMed = getProximoMedicamento(medicamentosAtivos);
+                if (!proximoMed) {
+                  return (
+                    <div className="mt-2">
+                      <p className="text-4xl font-bold text-white">--:--</p>
+                      <p className="text-neutral-500 text-sm mt-1">Nenhum medicamento ativo</p>
+                    </div>
+                  );
+                }
+
+                const proximaDose = getProximaDose(proximoMed.horarios);
+                const horaFormatada = Math.floor(proximaDose / 60).toString().padStart(2, '0') + ':' +
+                  (proximaDose % 60).toString().padStart(2, '0');
+
+                return (
+                  <div className="mt-2">
+                    <div className="flex items-center gap-2">
+                      <p className="text-4xl font-bold text-white">{horaFormatada}</p>
+                      <p className="text-lg font-medium text-neutral-400">{proximoMed.nome}</p>
+                    </div>
+                    <p className="text-neutral-500 text-sm mt-1">
+                      {getTempoAteProximaDose(proximaDose)}
+                    </p>
+                  </div>
+                );
+              })()}
             </motion.div>
 
             {/* Card Aderência */}
